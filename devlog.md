@@ -24,3 +24,9 @@ finish parser for add the mult recursively, test and then go on
 6th sesision
 add divisino and negation, and subtraction , also have to make sure division by zero throws error, tweak expressions
 
+7th session 
+added eval wrapper for all the inputs and also
+adding printing for all the results outputted
+result checking with conversion confirmation
+
+

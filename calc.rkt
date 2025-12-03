@@ -84,3 +84,12 @@
      (read-int start)]
 
     [else (invalid)]))
+
+(define (eval-line line history)
+  (define p (parse-expr (string->list line) history))
+  (when (not (only-ws? (cdr p))) (invalid))
+  (car p))
+
+(define (print-result id v)
+  (display id) (display ": ")
+  (displayln (real->double-flonum v)))
