@@ -45,8 +45,22 @@
   (define start (skip-ws cs))
   (when (null? start) (invalid))
   (define c (car start))
+  (define rest (cdr start))
+  (cond
+    ;; +
+    [(char=? c #\+)
+     (define p1 (parse-expr rest history))
+     (define p2 (parse-expr (cdr p1) history))
+     (cons (+ (car p1) (car p2)) (cdr p2))]
 
-;; add chars parts
-  (if (char-numeric? c)
-      (read-int start)
-      (invalid)))
+    ;; *
+    [(char=? c #\*)
+     (define p1 (parse-expr rest history))
+     (define p2 (parse-expr (cdr p1) history))
+     (cons (* (car p1) (car p2)) (cdr p2))]
+
+    ;; number
+    [(char-numeric? c)
+     (read-int start)]
+
+    [else (invalid)]))
