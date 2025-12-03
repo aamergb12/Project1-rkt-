@@ -21,3 +21,6 @@ creating the history parts, including the length get and parse expr structures
 5th session
 finish parser for add the mult recursively, test and then go on
 
+6th sesision
+add divisino and negation, and subtraction , also have to make sure division by zero throws error, tweak expressions
+

@@ -47,19 +47,39 @@
   (define c (car start))
   (define rest (cdr start))
   (cond
-    ;; +
-    [(char=? c #\+)
+    [(char=? c #\+)  
      (define p1 (parse-expr rest history))
+     (define v1 (car p1))
      (define p2 (parse-expr (cdr p1) history))
-     (cons (+ (car p1) (car p2)) (cdr p2))]
+     (define v2 (car p2))
+     (cons (+ v1 v2) (cdr p2))]
 
-    ;; *
-    [(char=? c #\*)
+    [(char=? c #\*) 
      (define p1 (parse-expr rest history))
+     (define v1 (car p1))
      (define p2 (parse-expr (cdr p1) history))
-     (cons (* (car p1) (car p2)) (cdr p2))]
+     (define v2 (car p2))
+     (cons (* v1 v2) (cdr p2))]
 
-    ;; number
+    [(char=? c #\/) 
+     (define p1 (parse-expr rest history))
+     (define v1 (car p1))
+     (define p2 (parse-expr (cdr p1) history))
+     (define v2 (car p2))
+     (when (= v2 0) (invalid))
+     (cons (quotient v1 v2) (cdr p2))]
+
+    [(char=? c #\-) 
+     (define p (parse-expr rest history))
+     (define v (car p))
+     (cons (- v) (cdr p))]
+
+    [(char=? c #\$) 
+      (define r (read-int rest))
+      (define id (car r))
+      (define val (history-get history id))
+      (cons val (cdr r))]
+
     [(char-numeric? c)
      (read-int start)]
 
