@@ -29,3 +29,24 @@
              (if (and n (integer? n))
                  (cons n cs)
                  (invalid))))])))
+
+(define (history-length h) (length h))
+
+(define (history-get h id)
+  (define len (length h))
+  (when (or (< id 1) (> id len)) (invalid))
+  (let find ([h h] [k (- len id)])
+    (cond
+      [(null? h) (invalid)]
+      [(zero? k) (car h)]
+      [else (find (cdr h) (sub1 k))])))
+
+(define (parse-expr cs history)
+  (define start (skip-ws cs))
+  (when (null? start) (invalid))
+  (define c (car start))
+
+;; add chars parts
+  (if (char-numeric? c)
+      (read-int start)
+      (invalid)))
