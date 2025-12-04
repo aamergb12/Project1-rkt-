@@ -1,5 +1,13 @@
 #lang racket
 
+(define prompt?
+  (let ([args (current-command-line-arguments())])
+    (cond
+      [(= (vector-length args) 0) #t]
+      [(string=? (vector-ref args 0) "-b") #f]
+      [(string=? (vector-ref args 0) "--batch") #f]
+      [else #t])))
+
 (define (invalid) (error 'calc "Invalid Expression"))
 
 (define (skip-ws cs)
@@ -93,3 +101,24 @@
 (define (print-result id v)
   (display id) (display ": ")
   (displayln (real->double-flonum v)))
+
+(define (loop history)
+  (when prompt? (display "> "))
+  (define line (read-line))
+  (cond
+    [(eof-object? line) (void)]
+    [(string=? line "quit") (void)]
+    [else
+     (define outcome
+       (with-handlers ([exn:fail? (λ (_e) 'error)])
+         (eval-line line history)))
+     (cond
+       [(eq? outcome 'error)
+        (displayln "Error: Invalid Expression")
+        (loop history)]
+       [else
+        (define new-id (+ 1 (history-length history)))
+        (print-result new-id outcome)
+        (loop (cons outcome history))])]))
+
+(loop '())
